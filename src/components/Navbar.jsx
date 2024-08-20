@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import '../styles/Navbar.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../CartContext';
+import { useProducts } from '../ProductsProvider';
+import { IoIosArrowForward } from "react-icons/io";
+import { FaShoppingCart, FaBars } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import axios from 'axios';
+
+export const Navbar = ({ handleContactClick }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [IsOpen, setIsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const [dropdownProducts, setDropdownProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [showCategories, setShowCategories] = useState(false);
+  const navigate = useNavigate();
+  const { cartItems, getTotalItemCount } = useCart();
+  const { categories } = useProducts();
+  const totalItemCount = getTotalItemCount();
+
+  const handleContactButtonClick = () => {
+    const descriptions = cartItems.map(item => item.description);
+    handleContactClick(descriptions);
+  };
+
+  const fetchProducts = async (categoryName) => {
+    try {
+      const response = await axios.get(`https://ecombackend1-git-main-nileshs-projects-68bb2634.vercel.app/products/${encodeURIComponent(categoryName)}`);
+      setDropdownProducts(response.data);
+      console.log("response is", response.data);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    }
+  };
+
+  const handleCategoryChange = (event) => {
+    const categoryName = event.target.value;
+    if (categoryName) {
+      navigate(`/subcategory/${encodeURIComponent(categoryName)}`);
+    } else {
+      navigate('/');
+    }
+  };
+
+  return (
+    <>
+      <div className='w-[100vw] h-[13vh] md:h-[14vh] lg:h-[15vh] flex justify-between bg-slate-200 '>
+        <div className='w-40 md:w-52 lg:w-[20vw] h-[13vh] md:h-[14vh] lg:h-[15vh] flex flex-col justify-center items-center'>
+          <h1 className='text-[.9rem] md:text-md lg:text-3xl text-center md:text-lg'>SAS ENGINEERING</h1>
+          <h4 className='text-[.6rem] md:text-[.8rem] lg:text-[1rem]' style={{ lineHeight: '.9rem' }}>INDUSTRIAL MART</h4>
+        </div>
+
+        {/* Hamburger menu */}
+        <div className='w-[20vw] md:hidden flex justify-center items-center'>
+          <FaBars className='text-3xl' onClick={toggleSidebar} />
+        </div>
+
+        {/* Sidebar */}
+        <div className={`fixed top-0 right-0 h-full bg-white z-50 shadow-lg transform ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
+          <div className='p-4 '>
+            <div className='flex justify-between'>
+            <IoClose className='text-2xl' onClick={toggleSidebar} />
+            <Link to='/cart' onClick={toggleSidebar}>
+                <FaShoppingCart color={'black'} className='text-xl' />
+                {totalItemCount > 0 && <span className='cartTotal'>{totalItemCount}</span>}
+              </Link>
+            </div>
+            
+            <ul className='mt-4'>
+              <li><Link to='/' onClick={toggleSidebar}>Home</Link></li>
+              <li onClick={() => setIsOpen(!IsOpen)}>Products
+                {IsOpen && (
+                  <ul className='bg-white shadow-2xl pl-1 mt-2'>
+                    <li onClick={() => handleCategoryChange({ target: { value: "" } })} className='text-black hover:bg-slate-100 text-[.6rem]'>ALL CATEGORIES</li>
+                    {categories && categories.map((category, index) => (
+                      <li key={index} onClick={() => handleCategoryChange({ target: { value: category.name } })} className='text-black text-[.6rem] hover:bg-slate-100'>
+                        {category.name.toUpperCase()}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+              {/* <li><Link to='/about' onClick={toggleSidebar}>About Us</Link></li> */}
+              <li><Link to='/contacts' onClick={toggleSidebar}>Contacts</Link></li>
+              <li><Link to='/services' onClick={toggleSidebar}>Services</Link></li>
+            </ul>
+            <div className='mt-6'>
+              
+              <button onClick={() => { toggleSidebar(); handleContactButtonClick(); }} className='bg-black text-white mt-4 px-3 py-2 rounded-md shadow-2xl'>Get Quote</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className='hidden md:flex w-[55vw] md:w-[55vw] lg:w-[60vw] h-[13vh] md:h-[14vh] lg:h-[15vh]'>
+          <ul className='w-[100%] flex justify-evenly lg:justify-end lg:pr-5 lg:gap-12 items-center text-[.7rem] md:text-lg lg:text-2xl text-black font-semibold'>
+            <li><Link to='/'>Home</Link></li>
+            <li style={{ position: 'relative' }} onClick={() => setIsOpen(!IsOpen)}>Products
+              {IsOpen && <div className='absolute md:w-[55vw] lg:w-[50vw] top-[7.5vh] md:top-[8.6vh] lg:top-[9.4vh] md:left-[-15.5vw] lg:left-[-19vw]  z-50 bg-white shadow-2xl'>
+                <ul className='grid grid-cols-3 grid-rows-5  h-[100%] w-[100%] '>
+                  <li onClick={() => handleCategoryChange({ target: { value: "" } })} className='hover:bg-slate-100 md:text-[.7rem] lg:text-[1rem] text-center pt-1'>ALL CATEGORIES</li>
+                  {categories && categories.map((category, index) => (
+                    <li key={index} onClick={() => handleCategoryChange({ target: { value: category.name } })} className='hover:bg-slate-100 md:text-[.7rem] lg:text-[1rem] text-center pt-1'>
+                      {category.name.toUpperCase()}
+                    </li>
+                  ))}
+                </ul>
+              </div>}
+            </li>
+            {/* <li><Link>About Us</Link></li> */}
+            <li><Link to='/contacts'>Contacts</Link></li>
+            <li><Link>Services</Link></li>
+          </ul>
+        </div>
+        <div className='hidden w-[20.3vw] md:w-[18.3vw] lg:w-[20vw] h-[13vh] md:h-[14vh] lg:h-[15vh] md:flex justify-center items-center lg:gap-10 '>
+        <Link to='/cart'>
+            <FaShoppingCart  color={'black'} className='text-xl md:text-2xl lg:text-4xl' />
+            {totalItemCount > 0 && <span className='cartTotal'>{totalItemCount}</span>}
+        </Link>
+        <div> <button onClick={handleContactButtonClick} className='bg-black  text-white ml-1 px-1 text-[.6rem] lg:w-24 lg:h-12 rounded-md md:rounded-lg lg:rounded-lg shadow-2xl lg:text-lg'>Get Quote</button><br/>
+         
+        </div>
+        </div>
+      </div>
+    </>
+  );
+};
