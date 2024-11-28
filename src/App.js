@@ -38,7 +38,6 @@ function App() {
       <ProductsProvider>
     <div className="App">
       <Navbar toggleModal={toggleModal} handleContactClick={handleContactClick}/>
-      {/* <Navbar2/> */}
     <Routes>
     <Route path="/" element={<Router/>}/>
     <Route path="/subcategory/:encodedName" element={<Subcategory toggleModal={toggleModal}/>}/>

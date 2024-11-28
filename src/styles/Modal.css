@@ -34,7 +34,7 @@
 
 .closeDiv {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
   padding-bottom: 1vh;
@@ -46,19 +46,22 @@
 
 .contactInfo {
   display: flex;
+  gap:1rem;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   padding-bottom: 1vh;
+  margin-top: 1vh;
+  /* background-color: orange; */
 }
 
 .contactInfo input {
-  width: 100%; /* Full width on smaller screens */
-  height: 6vh;
+  width: 40%; /* Full width on smaller screens */
+  height: 5vh;
   margin-bottom: 1vh;
   padding-left: 1vw;
-  font-size: 12px;
-  border-radius: 8px;
+  font-size: 1rem;
+  border-radius: 4px;
   border: 0.5px solid black;
 }
 
@@ -83,7 +86,9 @@
 }
 
 .addressInfo textarea {
-  height: 10vh;
+  margin-top:.5vh;
+  height: 15vh;
+  /* background-color: gray; */
 }
 
 .formContainer1 button {
@@ -95,18 +100,19 @@
 
 @media (max-width: 480px) {
   .formContain {
-      width: 90%;
+      width: 80%;
       max-width: 90%; /* Adjusted maximum width */
-      height: 65vh; /* Adjusted height for smaller screens */
+      height: 50vh; /* Adjusted height for smaller screens */
   }
 
   .contactInfo input,
   .addressInfo input,
   .addressInfo textarea {
-      font-size: 14px; /* Increased font size for better readability on smaller screens */
+      font-size: 12px; /* Increased font size for better readability on smaller screens */
   }
 
   .formContainer1 button {
-      font-size: 14px; /* Increased font size for buttons */
+      font-size: 12px; /* Increased font size for buttons */
   }
+  
 }

@@ -2,17 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Products.css';
 import { useProducts } from '../ProductsProvider';
+import { FaSpinner } from 'react-icons/fa';
 
 export const Products = () => {
     const { categories, loading } = useProducts();
     
     if (loading) {
-        return <p>Loading categories...</p>;
+        return (
+            <div className="flex justify-center items-center w-[100vw] h-[90vh]">
+                <FaSpinner className="animate-spin lg:text-5xl md:text-4xl text-3xl" />
+                <p className="ml-2 text-lg md:text-2xl lg:text-3xl">Loading categories...</p>
+            </div>
+        );
     }
+    
     // console.log('category data is',categories)
     return (
         <>
-            <h4 style={{ textAlign: 'center', marginTop: '1vh' }}><b>Categories</b></h4>
+            <h4 style={{ textAlign: 'center', marginTop: '1vh' }} className='md:text-2xl lg:text-3xl tracking-wide'><b>Categories</b></h4>
             <div className="container1">
                 {categories && categories.map((product) => {
                     const encodedName = encodeURIComponent(product.name);
@@ -34,6 +41,7 @@ export const Products = () => {
                         </div>
                     );
                 })}
+                
             </div>
         </>
     );

@@ -38,12 +38,13 @@ export const ProductsProvider = ({ children }) => {
 
     // Function to fetch categories
     const fetchCategories = async () => {
-        const url = 'http://192.168.0.44/wordpress/wp-json/wc/v3/products/categories';
+        // const url = 'http://192.168.0.44/wordpress/wp-json/wc/v3/products/categories';
+        const url = 'http://store.sasengineering.in/wp-json/wc/v3/products/categories';
         const headers = createOAuthHeaders(url, 'GET');
 
         try {
             const response = await axios.get(url, { headers });
-            setCategories(response.data);
+            setCategories(response.data.filter(obj=>{ return obj.name !== "Uncategorized"}));
         } catch (error) {
             console.error("Error fetching categories:", error);
         } finally {
@@ -53,7 +54,8 @@ export const ProductsProvider = ({ children }) => {
 
     // Function to fetch products
     const fetchProducts = async () => {
-        const url = 'http://192.168.0.44/wordpress/wp-json/wc/v3/products';
+        // const url = 'http://192.168.0.44/wordpress/wp-json/wc/v3/products';
+        const url = 'http://store.sasengineering.in/wp-json/wc/v3/products';
         const headers = createOAuthHeaders(url, 'GET');
 
         try {

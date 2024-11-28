@@ -66,12 +66,19 @@ export const Modal = ({ message, onClose }) => {
     }
   };
 
+  function removeHtmlTags(html) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+}
+const finalMessage = removeHtmlTags(formData.message)
+console.log("final message is ",finalMessage)
   return (
     <div className='modalBackground'>
       <div className='formContain'>
         <form className='formContainer1' onSubmit={handleSubmit}>
           <div className="closeDiv">
-            <h3>Get In Touch</h3>
+            {/* <h3>Get In Touch</h3> */}
             <MdOutlineClose onClick={onClose} size={30} id='closeButton' />
           </div>
           <div className="contactInfo">
@@ -107,25 +114,28 @@ export const Modal = ({ message, onClose }) => {
               onChange={handleChange} 
             />
             {errors.phone && <p className="error">{errors.phone}</p>}
+           
           </div>
           <div className="addressInfo">
-            <input 
+          {/* <input 
               type='text' 
               placeholder='Address' 
               name='address' 
               value={formData.address} 
               onChange={handleChange} 
-            />
+              style={{fontSize:'1rem'}}
+            /> */}
             <textarea 
               name='message' 
               placeholder='Type your message here' 
-              value={formData.message} 
+              value={finalMessage} 
               onChange={handleChange} 
+              style={{fontSize:'1.1rem',paddingTop:'1vh'}}
             />
             {errors.message && <p className="error">{errors.message}</p>}
           </div>
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+          <button type="submit" disabled={isSubmitting} className='bg-[red] h-12 rounded-xl text-lg text-white hover:bg-red-400'>
+            {isSubmitting ? 'Submitting...' : 'SUBMIT'}
           </button>
         </form>
       </div>
